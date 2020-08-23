@@ -53,7 +53,7 @@ jobs:
         sudo df -h
         make -j$(nproc) || make -j1 V=s
         sudo df -h
-        
+        #dd
     - name: Upload entire bin directory
       uses: actions/upload-artifact@master
       if: always()
