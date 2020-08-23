@@ -5,7 +5,7 @@
 
 mkdir -p package/custom
 cd package/custom
-# git clone https://github.com/coolsnowwolf/packages
+git clone https://github.com/coolsnowwolf/packages
 git clone https://github.com/kenzok8/small
 git clone https://github.com/kenzok8/openwrt-packages
 git clone https://github.com/Lienol/openwrt-package
