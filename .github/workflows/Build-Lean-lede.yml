@@ -376,6 +376,7 @@ jobs:
         path: ${{ env.FIRMWARE }}
         
     - name: Upload firmware to Download Station (Without packages)
+      #xxxxxx
       if: success()
       run: |
         cd lede/bin/targets/*/*
