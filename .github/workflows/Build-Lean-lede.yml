@@ -56,9 +56,15 @@ jobs:
     - name: Setup Upload dictionary
       if: always()
       run: |
-        mkdir lede/bin/targets/ramips/mt7621/xiaomi
-        mv lede/bin/targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin lede/bin/targets/ramips/mt7621/xiaomi
-        cd lede/bin/targets/ramips/mt7621/xiaomi
+        cd lede/bin/
+        rm -rf packages
+        rm -rf targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-initramfs-kernel.bin
+        rm -rf targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-initramfs-kernel.bin
+        rm -rf targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-factory.bin
+        rm -rf targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-kernel1.bin
+        rm -rf targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-rootfs0.bin
+        pwd
+        ls -l
         echo "::set-env name=FIRMWARE::$(pwd)"
         
     - name: Only Upload firmware (Without packages)
@@ -68,13 +74,20 @@ jobs:
         name: ac2100
         path: ${{ env.FIRMWARE }}
         
-    - name: Upload firmware to Download Station 
-      if: success()
+     - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+
+    - name: Install coscmd
       run: |
-        cd lede/bin/targets/ramips/mt7621
-        zip -r -o -q sysupgrade.zip . -i openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin
-        #curl -F "avator=@openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin" -X POST "https://yangzhimiao.cn/wol/upload.php"
-        curl -F "filename=@openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin" -X POST "https://www55.zippyshare.com/upload"|grep outer-ac2100-squashfs-sysupgrade.bin|awk 'BEGIN{FS="&#034;"}''{print $2}'|grep file.html|head -n 1
-        curl -F "filename=@sysupgrade.zip" -X POST "https://www55.zippyshare.com/upload"|grep sysupgrade.zip|awk 'BEGIN{FS="&#034;"}''{print $2}'|grep file.html|head -n 1
-        #curl -F "avator=@sysupgrade.zip" -X POST "https://yangzhimiao.cn/wol/upload.php"
-        #curl -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/XiaoMi/XiaoMi-AC2100/Lean" -F "file=@mt7621.zip" ${{ secrets.MAIN_UPLOAD_PROCESSOR }}
+        pip install coscmd
+
+    - name: Upload to COS
+      env:
+        COS_BUCKET_NAME: openwrt-1251594457
+        COS_BUCKET_LOCATION: na-toronto
+      run: |
+        cd lede/bin/
+        coscmd config -a ${{secrets.COS_SECRET_ID}} -s ${{secrets.COS_SECRET_KEY}} -b ${COS_BUCKET_NAME} -r ${COS_BUCKET_LOCATION} -m 10
+        coscmd upload -r -s lede/bin/ /
