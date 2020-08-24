@@ -1,4 +1,4 @@
-name: UP
+name: UP-lede
 on:
   push:
     branches:
