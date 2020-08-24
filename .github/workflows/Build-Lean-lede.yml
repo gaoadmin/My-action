@@ -53,30 +53,22 @@ jobs:
         make -j$(nproc) || make -j1 V=s
         sudo df -h
         
-    - name: Only Upload Packages to Download Station
-      if: success()
-      run: |
-        cd lede/bin
-        zip -r -o -q  mt7621-Package.zip . -i *.ipk
-        #curl -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/XiaoMi/XiaoMi-AC2100/Lean-Package" -F "file=@mt7621-Package.zip" ${{ secrets.MAIN_UPLOAD_PROCESSOR }}
-        #curl --socks5 ${{ secrets.PROXY_ADDR }} -U ${{ secrets.PROXY_USER }} -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/RaspberryPi4/Lean-Package" -F "file=@mt7621-Package.zip" ${{ secrets.CN_STATION_PROCESSOR }}
-
     - name: Setup Upload dictionary
       if: always()
       run: |
-        cd lede/bin
-        rm -rf packages
+        mkdir lede/bin/targets/ramips/mt7621/xiaomi
+        mv lede/bin/targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin lede/bin/targets/ramips/mt7621/xiaomi
+        cd lede/bin/targets/ramips/mt7621/xiaomi
         echo "::set-env name=FIRMWARE::$(pwd)"
         
     - name: Only Upload firmware (Without packages)
       uses: actions/upload-artifact@master
       if: always()
       with:
-        name: mt7621
+        name: ac2100
         path: ${{ env.FIRMWARE }}
         
-    - name: Upload firmware to Download Station (Without packages)
-      #xxxxxx
+    - name: Upload firmware to Download Station 
       if: success()
       run: |
         cd lede/bin/targets/ramips/mt7621
