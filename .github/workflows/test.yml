@@ -15,7 +15,7 @@ jobs:
         pwd
         mkdir -p xxx/xxx
         cd xxx
-        echo xxxxxssx>aa.txt
+        echo xxxxxssx>xxx/aa.txt
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
