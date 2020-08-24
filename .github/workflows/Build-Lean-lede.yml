@@ -68,6 +68,11 @@ jobs:
         rm -rf packages
         rm -rf mt7621-Package.zip
         rm -rf targets/ramips/mt7621/packages
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-factory.bin"
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-rootfs0.bin"
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-kernel.bin"
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-kernel1.bin"
+        sleep 10s
         echo "::set-env name=FIRMWARE::$(pwd)"
         
     - name: Only Upload firmware (Without packages)
