@@ -28,4 +28,4 @@ sed -i 's/192.168/10.0/g' package/base-files/files/bin/config_generate
 # Add some default settings
 
 #\cp -rf ../lede/zzz-default-settings package/lean/default-settings/files/zzz-default-settings
-curl -fsSL https://raw.githubusercontent.com/1orz/My-action/master/lean-lede/zzz-default-settings > package/lean/default-settings/files/zzz-default-settings
+curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/zzz-default-settings > package/lean/default-settings/files/zzz-default-settings
