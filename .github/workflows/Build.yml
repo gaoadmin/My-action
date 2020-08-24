@@ -1,0 +1,92 @@
+name: Build-Lean-lede
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/Build-Lean-lede.yml'
+#      -  'lean-lede/x86_64/.config'
+ #     -  'lean-lede/rpi4/.config'
+  #    -  'lean-lede/rpi/.config'
+   #   -  'lean-lede/rpi32/.config'
+      -  'lean-lede/mt7621/.config'
+  schedule:
+        - cron: 0 */4 * * *
+
+jobs:
+  MT7621:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Prepare environment.
+      env:
+          DEBIAN_FRONTEND: noninteractive
+      run: |
+        bash <(curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/prenv.sh)
+        
+    - name: Clone source and install
+      run: |
+        git clone https://github.com/gaoadmin/lede
+        cd lede
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+        
+    - name: Download and Load custom configuration
+      run: |
+        cd lede
+        curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/mt7621/.config >.config
+        bash <(curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/diy.sh)
+        ./scripts/feeds install -a
+        make defconfig
+        
+    - name: Download package
+      run: |
+        cd lede
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Multi-core or Single core compile
+      run: |
+        cd lede
+        echo -e "$(nproc) thread compile"
+        sudo df -h
+        make -j$(nproc) || make -j1 V=s
+        sudo df -h
+        
+    - name: Only Upload Packages to Download Station
+      if: success()
+      run: |
+        cd lede/bin
+        zip -r -o -q  mt7621-Package.zip . -i *.ipk
+        curl -F "filename=@mt7621-Package.zip" -X POST "https://www55.zippyshare.com/upload" -s|grep config.ini|awk 'BEGIN{FS="&#034;"}''{print $2}'|grep file.html|head -n 1
+        #curl -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/XiaoMi/XiaoMi-AC2100/Lean-Package" -F "file=@mt7621-Package.zip" ${{ secrets.MAIN_UPLOAD_PROCESSOR }}
+        #curl --socks5 ${{ secrets.PROXY_ADDR }} -U ${{ secrets.PROXY_USER }} -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/RaspberryPi4/Lean-Package" -F "file=@mt7621-Package.zip" ${{ secrets.CN_STATION_PROCESSOR }}
+    - name: Setup Upload dictionary
+      if: always()
+      run: |
+        cd lede/bin
+        rm -rf packages
+        rm -rf mt7621-Package.zip
+        rm -rf targets/ramips/mt7621/packages
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-factory.bin"
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-rootfs0.bin"
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-kernel.bin"
+        rm -rf "targets/ramips/mt7621/openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-kernel1.bin"
+        sleep 10s
+        echo "::set-env name=FIRMWARE::$(pwd)"
+        
+    - name: Only Upload firmware (Without packages)
+      uses: actions/upload-artifact@master
+      if: always()
+      with:
+        name: mt7621
+        path: ${{ env.FIRMWARE }}
+        
+    - name: Upload firmware to Download Station (Without packages)
+      if: success()
+      run: |
+        cd lede/bin/targets/ramips/mt7621
+        zip -r -o -q mt7621.zip . -i 'openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin'
+        curl -F "filename=@mt7621.zip" -X POST "https://www55.zippyshare.com/upload" -s|grep config.ini|awk 'BEGIN{FS="&#034;"}''{print $2}'|grep file.html|head -n 1
+        #curl -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/XiaoMi/XiaoMi-AC2100/Lean" -F "file=@mt7621.zip" ${{ secrets.MAIN_UPLOAD_PROCESSOR }}
+        #curl --socks5 ${{ secrets.PROXY_ADDR }} -U ${{ secrets.PROXY_USER }} -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/RaspberryPi4/Lean" -F "file=@mt7621.zip" ${{ secrets.CN_STATION_PROCESSOR }}
