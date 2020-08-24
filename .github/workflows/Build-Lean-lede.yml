@@ -81,6 +81,8 @@ jobs:
       run: |
         cd lede/bin/targets/ramips/mt7621
         zip -r -o -q sysupgrade.zip . -i openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin
-        curl -F "avator=@openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin" -X POST "https://yangzhimiao.cn/wol/upload.php"
-        curl -F "avator=@sysupgrade.zip" -X POST "https://yangzhimiao.cn/wol/upload.php"
+        #curl -F "avator=@openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin" -X POST "https://yangzhimiao.cn/wol/upload.php"
+        curl -F "filename=@openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin" -X POST "https://www55.zippyshare.com/upload"|grep outer-ac2100-squashfs-sysupgrade.bin|awk 'BEGIN{FS="&#034;"}''{print $2}'|grep file.html|head -n 1
+        curl -F "filename=@sysupgrade.zip" -X POST "https://www55.zippyshare.com/upload"|grep sysupgrade.zip|awk 'BEGIN{FS="&#034;"}''{print $2}'|grep file.html|head -n 1
+        #curl -F "avator=@sysupgrade.zip" -X POST "https://yangzhimiao.cn/wol/upload.php"
         #curl -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/XiaoMi/XiaoMi-AC2100/Lean" -F "file=@mt7621.zip" ${{ secrets.MAIN_UPLOAD_PROCESSOR }}
