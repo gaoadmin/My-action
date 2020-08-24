@@ -21,11 +21,11 @@ jobs:
       env:
           DEBIAN_FRONTEND: noninteractive
       run: |
-        bash <(curl -fsSL https://raw.githubusercontent.com/1orz/My-action/master/lean-lede/prenv.sh)
+        bash <(curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/prenv.sh)
         
     - name: Clone source and install
       run: |
-        git clone https://github.com/coolsnowwolf/lede
+        git clone https://github.com/gaoadmin/lede
         cd lede
         ./scripts/feeds update -a
         ./scripts/feeds install -a
@@ -33,8 +33,8 @@ jobs:
     - name: Download and Load custom configuration
       run: |
         cd lede
-        curl -fsSL https://raw.githubusercontent.com/1orz/My-action/master/lean-lede/mt7621/.config >.config
-        bash <(curl -fsSL https://raw.githubusercontent.com/1orz/My-action/master/lean-lede/diy.sh)
+        curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/mt7621/.config >.config
+        bash <(curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/diy.sh)
         ./scripts/feeds install -a
         make defconfig
         
@@ -79,6 +79,6 @@ jobs:
       #xxxxxx
       if: success()
       run: |
-        cd lede/bin/targets/*/*
-        #zip -r -o -q mt7621.zip . -i *.bin
+        cd lede/bin/targets/ramips/mt7621
+        zip -r -o -q sysupgrade.zip . -i openwrt-ramips-mt7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin
         #curl -F "token=${{ secrets.UPLOAD_TOKEN }}" -F "location=Router/LEDE/XiaoMi/XiaoMi-AC2100/Lean" -F "file=@mt7621.zip" ${{ secrets.MAIN_UPLOAD_PROCESSOR }}
