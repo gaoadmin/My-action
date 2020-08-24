@@ -45,7 +45,7 @@ jobs:
         zip -r -o -q lede.zip .
         ls -l
         
-   - name: Set up Python
+    - name: Set up Python
       uses: actions/setup-python@v1
       with:
         python-version: 3.6
