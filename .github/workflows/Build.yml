@@ -56,8 +56,8 @@ jobs:
         
     - name: Up
       env:
-        COS_BUCKET_NAME: openwrt-1251594457
-        COS_BUCKET_LOCATION: na-toronto
+        COS_BUCKET_NAME: lede-1251594457
+        COS_BUCKET_LOCATION: ap-chengdu
       run: |
         cd lede
         zip -r -o -q lede.zip .
