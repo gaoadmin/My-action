@@ -21,7 +21,7 @@ jobs:
       env:
           DEBIAN_FRONTEND: noninteractive
       run: |
-        makedir test
+        mkdir test
         cd test
         #bash <(curl -fsSL https://raw.githubusercontent.com/gaoadmin/My-action/master/lean-lede/prenv.sh)
         cat /etc/apt/sources.list>test.txt
