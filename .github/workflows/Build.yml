@@ -11,7 +11,7 @@ on:
    #   -  'lean-lede/rpi32/.config'
       -  'lean-lede/mt7621/.config'
   schedule:
-        - cron: 4 * * * *
+        - cron: * */1 * * *
 
 jobs:
   MT7621:
