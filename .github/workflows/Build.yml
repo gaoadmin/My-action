@@ -4,7 +4,7 @@ on:
     branches:
       - master
     paths:
-      - '.github/workflows/Build-Lean-lede.yml'
+      - '.github/workflows/Build.yml'
 #      -  'lean-lede/x86_64/.config'
  #     -  'lean-lede/rpi4/.config'
   #    -  'lean-lede/rpi/.config'
