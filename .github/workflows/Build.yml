@@ -90,7 +90,7 @@ jobs:
         COS_BUCKET_LOCATION: ap-chengdu
       if: success()
       run: |
-        cd lede/bin/targets/ramips/mt7621
-        zip -r -o -q mt7621.zip . -i 'openwrt-ramips-mt 7621-xiaomi_mi-router-ac2100-squashfs-sysupgrade.bin'
+        cd lede/bin/
+        zip -r -o -q mt7621.zip .
         coscmd config -a ${{secrets.COS_SECRET_ID}} -s ${{secrets.COS_SECRET_KEY}} -b ${COS_BUCKET_NAME} -r ${COS_BUCKET_LOCATION} -m 10
         coscmd upload -r -s mt7621.zip /
