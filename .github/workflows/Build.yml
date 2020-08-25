@@ -11,7 +11,7 @@ on:
    #   -  'lean-lede/rpi32/.config'
       -  'lean-lede/mt7621/.config'
   schedule:
-        - cron: 0 */1 * * *
+        - cron: 0 */2 * * *
 jobs:
   MT7621:
     runs-on: ubuntu-latest
@@ -86,11 +86,12 @@ jobs:
         
     - name: Upload firmware to Download Station (Without packages)
       env:
-        COS_BUCKET_NAME: lede-1251594457
-        COS_BUCKET_LOCATION: ap-chengdu
+        COS_BUCKET_NAME: openwrt-1251594457
+        COS_BUCKET_LOCATION: na-toronto
       if: success()
       run: |
-        cd lede/bin/
+        cd lede/bin/targets/ramips/mt7621/
+        ls -l
         zip -r -o -q mt7621.zip .
         coscmd config -a ${{secrets.COS_SECRET_ID}} -s ${{secrets.COS_SECRET_KEY}} -b ${COS_BUCKET_NAME} -r ${COS_BUCKET_LOCATION} -m 10
         coscmd upload -r -s mt7621.zip /
