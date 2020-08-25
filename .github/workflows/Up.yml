@@ -4,14 +4,14 @@ on:
     branches:
       - master
     paths:
-      - '.github/workflows/Build-Lean-lede.yml'
+      - '.github/workflows/Up.yml'
 #      -  'lean-lede/x86_64/.config'
  #     -  'lean-lede/rpi4/.config'
   #    -  'lean-lede/rpi/.config'
    #   -  'lean-lede/rpi32/.config'
-      -  'lean-lede/mt7621/.config'
+    #  -  'lean-lede/mt7621/.config'
   schedule:
-        - cron: 0 */5 * * *
+        - cron: * * * * *
 
 jobs:
   MT7621:
