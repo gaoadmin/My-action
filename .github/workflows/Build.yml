@@ -24,7 +24,7 @@ jobs:
         
     - name: Clone source and install
       run: |
-        git clone https://github.com/coolsnowwolf/lede
+        git clone https://github.com/gaoadmin/lede
         cd lede
         rm -rf .conf
         ./scripts/feeds update -a
