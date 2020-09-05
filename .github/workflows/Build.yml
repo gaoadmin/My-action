@@ -11,7 +11,7 @@ on:
    #   -  'lean-lede/rpi32/.config'
       -  'lean-lede/mt7621/.config'
   schedule:
-        - cron: 0 3 * * *
+        - cron: 0 21 * * *
 jobs:
   MT7621:
     runs-on: ubuntu-latest
@@ -61,7 +61,7 @@ jobs:
         cd lede
         echo -e "$(nproc) thread compile"
         sudo df -h
-        make -j$(($(nproc) + 1)) V=s || make -j1 V=s
+        make -j1 V=s
         ls
         sudo df -h
         
