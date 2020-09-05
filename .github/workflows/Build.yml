@@ -24,8 +24,10 @@ jobs:
         
     - name: Clone source and install
       run: |
-        git clone https://github.com/gaoadmin/lede
+        git clone https://github.com/coolsnowwolf/lede
         cd lede
+        rm -rf target/linux/ramips/patches-5.4/102-mt7621-fix-cpu-clk-add-clkdev.patch
+        curl -fsSL https://raw.githubusercontent.com/gaoadmin/lede/master/target/linux/ramips/patches-5.4/102-mt7621-fix-cpu-clk-add-clkdev.patch >target/linux/ramips/patches-5.4/102-mt7621-fix-cpu-clk-add-clkdev.patch
         rm -rf .conf
         ./scripts/feeds update -a
         ./scripts/feeds install -a
