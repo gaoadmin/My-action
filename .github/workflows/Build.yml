@@ -61,7 +61,7 @@ jobs:
         cd lede
         echo -e "$(nproc) thread compile"
         sudo df -h
-        make -j1 V=s
+        make -j1 V=s >/dev/null
         ls
         sudo df -h
         
